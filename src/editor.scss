@@ -65,6 +65,14 @@
       // color: darken($link-color, 10%);
     }
   }
+
+  // Hover 扩展样式
+  .is-hovered {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-radius: 4px;
+    outline: 2px solid rgba(59, 130, 246, 0.3);
+    transition: all 0.15s ease;
+  }
 }
 
 .drag-handle {
