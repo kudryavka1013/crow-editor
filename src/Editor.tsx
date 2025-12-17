@@ -4,7 +4,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Code from "@tiptap/extension-code";
 import UniqueID from "@tiptap/extension-unique-id";
 import { Focus } from "@tiptap/extensions";
-import { Hover } from "./extensions/hover";
+import { Hover } from "./extensions/extension-node-hover/node-hover";
 import { TableKit } from '@tiptap/extension-table'
 
 // import {
