@@ -1,0 +1,86 @@
+@use "./styles/_variables.scss";
+@use "./styles/_keyframe-animations.scss";
+
+.crow-editor {
+  min-height: 500px;
+  height: 100%;
+  // border: 1px solid $border-color;
+  // border-radius: 0.5rem;
+  // background-color: $editor-bg-color;
+  // font-family: $editor-font-family;
+  // font-size: 1rem;
+  // line-height: 1.5;
+  // color: $text-color;
+
+
+  .tiptap.ProseMirror {
+    // 去除 contenteditable 聚焦时的默认边框
+    outline: none;
+    white-space: pre-wrap;
+    caret-color: var(--tt-cursor-color);
+
+    // 临时
+    padding: 1rem;
+  }
+
+  // 可选：为编辑器添加自定义聚焦样式
+  // &:focus {
+  //   border-color: $primary-color;
+  //   box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  // }
+
+  p {
+    margin: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: bold;
+    margin: 1rem 0 0.5rem;
+  }
+
+  strong {
+    font-weight: bolder;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  ul,
+  ol {
+    margin: 0.5rem 0 0.5rem 1.5rem;
+    padding: 0;
+  }
+
+  a {
+    // color: $link-color;
+    text-decoration: underline;
+
+    &:hover {
+      // color: darken($link-color, 10%);
+    }
+  }
+}
+
+.drag-handle {
+  align-items: center;
+  background: #f0f0f0;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  display: flex;
+  height: 1.5rem;
+  justify-content: center;
+  width: 1.5rem;
+  z-index: 20;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
