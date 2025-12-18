@@ -4,8 +4,9 @@ import StarterKit from "@tiptap/starter-kit";
 import Code from "@tiptap/extension-code";
 import UniqueID from "@tiptap/extension-unique-id";
 import { Focus } from "@tiptap/extensions";
-import { Hover } from "./extensions/extension-node-hover/node-hover";
-import { TableKit } from '@tiptap/extension-table'
+import { NodeHover } from "./extensions/extension-node-hover/node-hover";
+import { TableKit } from "@tiptap/extension-table";
+import { FloatingDragger } from "./ui/floating-menu";
 
 // import {
 //   Toolbar,
@@ -17,6 +18,7 @@ import { TableKit } from '@tiptap/extension-table'
 // import { Spacer } from "./components/tiptap-ui-primitive/spacer";
 
 import "./editor.scss";
+import { DragHandle } from "./extensions/extension-drag-handle/drag-handle-react";
 
 export interface CrowEditorRef {
   editor: ReturnType<typeof useEditor>;
@@ -33,17 +35,40 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
         excludes: "code",
         priority: 1001,
       }),
-      TableKit,
-      UniqueID,
+      TableKit.configure({
+        table: {
+          resizable: true,
+        },
+      }),
+      UniqueID.configure({
+        attributeName: "id",
+        types: [
+          "heading",
+          "paragraph",
+          "codeBlock",
+          "blockquote",
+          "bulletList",
+          "orderedList",
+          "listItem",
+          "table",
+          "tableRow",
+          "tableCell",
+          "tableHeader",
+        ],
+      }),
       Focus,
-      Hover.configure({
+      NodeHover.configure({
         className: "is-hovered",
-        mode: "deepest",
-        onHover: (node, pos) => {
-          console.log("鼠标悬停在节点上:", { 
-            type: node?.type?.name || '未知', 
-            pos, 
-            node 
+        mode: "all",
+        onHover: (node, pos, allNodes) => {
+          console.log("鼠标悬停在节点上:", {
+            type: node?.type?.name || "未知",
+            pos,
+            node,
+            allNodes: allNodes.map((n) => ({
+              type: n.node.type.name,
+              pos: n.pos,
+            })),
           });
         },
         onLeave: () => {
@@ -51,6 +76,88 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
         },
       }),
     ],
+    editorProps: {
+      handleDOMEvents: {
+        dragstart(view, event) {
+          const target = event.target as HTMLElement;
+          if (target.closest(".drag-handle")) {
+            return false;
+          }
+          event.preventDefault();
+          return true;
+        },
+        dragover(view, event) {
+          event.preventDefault();
+          event.dataTransfer!.dropEffect = "move";
+          return false;
+        },
+        drop(view, event) {
+          event.preventDefault();
+
+          const dragDataStr = event.dataTransfer?.getData(
+            "application/x-crow-node"
+          );
+          if (!dragDataStr) {
+            return false;
+          }
+
+          try {
+            const dragData = JSON.parse(dragDataStr);
+            const { pos: sourcePos, nodeSize } = dragData;
+
+            // 获取放置位置
+            const dropPos = view.posAtCoords({
+              left: event.clientX,
+              top: event.clientY,
+            });
+            if (!dropPos) {
+              return false;
+            }
+
+            const { tr, doc } = view.state;
+            const sourceNode = doc.nodeAt(sourcePos);
+
+            if (!sourceNode) {
+              console.error("源节点不存在");
+              return false;
+            }
+
+            // 计算目标位置（确保在有效范围内）
+            let targetPos = dropPos.pos;
+
+            // 如果拖到同一位置，不做处理
+            if (targetPos >= sourcePos && targetPos <= sourcePos + nodeSize) {
+              console.log("拖到同一位置，取消操作");
+              return false;
+            }
+
+            // 先删除源节点
+            tr.delete(sourcePos, sourcePos + nodeSize);
+
+            // 如果目标位置在源节点后面，需要调整位置
+            if (targetPos > sourcePos) {
+              targetPos -= nodeSize;
+            }
+
+            // 在目标位置插入节点
+            tr.insert(targetPos, sourceNode);
+
+            view.dispatch(tr);
+
+            console.log("节点移动成功", {
+              from: sourcePos,
+              to: targetPos,
+              node: sourceNode.type.name,
+            });
+
+            return true;
+          } catch (error) {
+            console.error("拖拽失败:", error);
+            return false;
+          }
+        },
+      },
+    },
     content: {
       type: "doc",
       content: [
@@ -64,7 +171,10 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
           content: [
             { type: "text", text: "这是一个基于 " },
             { type: "text", marks: [{ type: "bold" }], text: "Tiptap" },
-            { type: "text", text: " 构建的富文本编辑器，支持多种交互功能和格式。" },
+            {
+              type: "text",
+              text: " 构建的富文本编辑器，支持多种交互功能和格式。",
+            },
           ],
         },
         {
@@ -86,7 +196,11 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
                     { type: "text", text: "、" },
                     { type: "text", marks: [{ type: "italic" }], text: "斜体" },
                     { type: "text", text: " 和 " },
-                    { type: "text", marks: [{ type: "code" }], text: "行内代码" },
+                    {
+                      type: "text",
+                      marks: [{ type: "code" }],
+                      text: "行内代码",
+                    },
                   ],
                 },
               ],
@@ -143,7 +257,9 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
                       content: [
                         {
                           type: "paragraph",
-                          content: [{ type: "text", text: "StarterKit 基础功能" }],
+                          content: [
+                            { type: "text", text: "StarterKit 基础功能" },
+                          ],
                         },
                       ],
                     },
@@ -238,7 +354,13 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
                   content: [
                     {
                       type: "paragraph",
-                      content: [{ type: "text", marks: [{ type: "bold" }], text: "功能" }],
+                      content: [
+                        {
+                          type: "text",
+                          marks: [{ type: "bold" }],
+                          text: "功能",
+                        },
+                      ],
                     },
                   ],
                 },
@@ -247,7 +369,13 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
                   content: [
                     {
                       type: "paragraph",
-                      content: [{ type: "text", marks: [{ type: "bold" }], text: "描述" }],
+                      content: [
+                        {
+                          type: "text",
+                          marks: [{ type: "bold" }],
+                          text: "描述",
+                        },
+                      ],
                     },
                   ],
                 },
@@ -256,7 +384,13 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
                   content: [
                     {
                       type: "paragraph",
-                      content: [{ type: "text", marks: [{ type: "bold" }], text: "状态" }],
+                      content: [
+                        {
+                          type: "text",
+                          marks: [{ type: "bold" }],
+                          text: "状态",
+                        },
+                      ],
                     },
                   ],
                 },
@@ -288,7 +422,9 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
                   content: [
                     {
                       type: "paragraph",
-                      content: [{ type: "text", marks: [{ type: "bold" }], text: "✓" }],
+                      content: [
+                        { type: "text", marks: [{ type: "bold" }], text: "✓" },
+                      ],
                     },
                   ],
                 },
@@ -320,7 +456,9 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
                   content: [
                     {
                       type: "paragraph",
-                      content: [{ type: "text", marks: [{ type: "bold" }], text: "✓" }],
+                      content: [
+                        { type: "text", marks: [{ type: "bold" }], text: "✓" },
+                      ],
                     },
                   ],
                 },
@@ -352,7 +490,9 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
                   content: [
                     {
                       type: "paragraph",
-                      content: [{ type: "text", marks: [{ type: "bold" }], text: "✓" }],
+                      content: [
+                        { type: "text", marks: [{ type: "bold" }], text: "✓" },
+                      ],
                     },
                   ],
                 },
@@ -370,6 +510,16 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
       // attributes: {
       //   class: "crow-editor-content",
       // },
+
+      // 禁用默认的拖拽行为，只允许通过拖拽手柄触发
+      editable: () => true,
+      handleDOMEvents: {
+        dragstart: (view, event) => {
+          // 阻止默认的文本拖拽
+          event.preventDefault();
+          return true;
+        },
+      },
     },
   });
 
@@ -402,6 +552,10 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
             <Button data-style="primary">Save</Button>
           </ToolbarGroup>
         </Toolbar> */}
+        <FloatingDragger editor={editor} />
+        <DragHandle editor={editor}>
+          <div>test</div>
+        </DragHandle>
         <EditorContent editor={editor} className="crow-editor" />
       </div>
     </EditorContext.Provider>

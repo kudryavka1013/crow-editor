@@ -1,4 +1,5 @@
 import { Extension } from "@tiptap/core";
+import { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import { NodeHoverPlugin } from "./node-hover-plugin";
 
 export interface HoverOptions {
@@ -20,27 +21,16 @@ export interface HoverOptions {
   /**
    * 鼠标悬停时的回调函数
    */
-  onHover?: (node: any, pos: number) => void;
+  onHover?: (node: ProseMirrorNode, pos: number, allNodes: Array<{ node: ProseMirrorNode; pos: number }>) => void;
 
   /**
    * 鼠标离开时的回调函数
    */
   onLeave?: () => void;
-
-  /**
-   * 是否在 hover 节点左上角显示按钮
-   * @default false
-   */
-  showButton?: boolean;
-
-  /**
-   * 按钮点击的回调函数
-   */
-  onButtonClick?: (node: any, pos: number) => void;
 }
 
-export const Hover = Extension.create<HoverOptions>({
-  name: "hover",
+export const NodeHover = Extension.create<HoverOptions>({
+  name: "nodeHover",
 
   addOptions() {
     return {
@@ -53,13 +43,35 @@ export const Hover = Extension.create<HoverOptions>({
     };
   },
 
+  addStorage() {
+    return {
+      hoveredNode: null as ProseMirrorNode | null,
+      hoveredPos: null as number | null,
+      allHoveredNodes: [] as Array<{ node: ProseMirrorNode; pos: number }>,
+    };
+  },
+
   addProseMirrorPlugins() {
     return [
       NodeHoverPlugin({
         className: this.options.className,
         mode: this.options.mode,
-        onHover: this.options.onHover,
-        onLeave: this.options.onLeave,
+        onHover: (node, pos, allNodes) => {
+          // 更新 storage
+          this.storage.hoveredNode = node;
+          this.storage.hoveredPos = pos;
+          this.storage.allHoveredNodes = allNodes;
+          // 调用用户提供的回调
+          this.options.onHover?.(node, pos, allNodes);
+        },
+        onLeave: () => {
+          // 清空 storage
+          this.storage.hoveredNode = null;
+          this.storage.hoveredPos = null;
+          this.storage.allHoveredNodes = [];
+          // 调用用户提供的回调
+          this.options.onLeave?.();
+        },
       }),
     ];
   },

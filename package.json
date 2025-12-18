@@ -10,9 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.7.4",
     "@floating-ui/react": "^0.27.16",
     "@tiptap/core": "^3.13.0",
+    "@tiptap/extension-bubble-menu": "^3.13.0",
     "@tiptap/extension-code": "^3.13.0",
+    "@tiptap/extension-node-range": "^3.13.0",
     "@tiptap/extension-table": "^3.13.0",
     "@tiptap/extension-unique-id": "^3.13.0",
     "@tiptap/extensions": "^3.13.0",
