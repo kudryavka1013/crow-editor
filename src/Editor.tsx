@@ -3,16 +3,16 @@ import { forwardRef, useImperativeHandle } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Code from "@tiptap/extension-code";
 import UniqueID from "@tiptap/extension-unique-id";
-// import {
-//   Toolbar,
-//   ToolbarGroup,
-//   ToolbarSeparator,
-// } from "@/components/tiptap-ui-primitive/toolbar";
-// import { Separator } from "@/components/tiptap-ui-primitive/separator";
-// import { Button } from "./components/tiptap-ui-primitive/button";
-// import { Spacer } from "./components/tiptap-ui-primitive/spacer";
 
 import "./editor.scss";
+import { CrowDocument } from "./core/extensions/document";
+import { DocTitle } from "./core/extensions/doc-title";
+import {
+  PageBlockHeader,
+  PageBlockChildren,
+} from "./core/extensions/page-block";
+import { DocController } from "./core/extensions/doc-controller/index.ts";
+import { Selection } from "@tiptap/extensions";
 
 export interface CrowEditorRef {
   editor: ReturnType<typeof useEditor>;
@@ -21,17 +21,57 @@ export interface CrowEditorRef {
 const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
   const editor = useEditor({
     extensions: [
+      // 自定义文档结构（必须在最前面）
+      CrowDocument,
+      DocTitle,
+      PageBlockHeader,
+      PageBlockChildren,
+      DocController,
+      
+      Selection,
       StarterKit.configure({
         code: false,
+        document: false, // 禁用默认的 document
       }),
-      // excludes some marks/nodes from being inside a code block
+
       Code.extend({
         excludes: "code",
         priority: 1001,
       }),
+
       UniqueID,
     ],
-    content: "<p>Hello Crow Editor!</p>",
+
+    // 初始内容（固定结构）
+    content: {
+      type: "doc",
+      content: [
+        {
+          type: "pageBlockHeader",
+          content: [
+            {
+              type: "heading",
+              attrs: { level: 1 },
+              content: [{ type: "text", text: "无标题文档" }],
+            },
+            {
+              type: "docTitle",
+              content: [{ type: "text", text: "文档标题" }],
+            },
+          ],
+        },
+        {
+          type: "pageBlockChildren",
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "开始输入内容..." }],
+            },
+          ],
+        },
+      ],
+    },
+
     editorProps: {
       // attributes: {
       //   class: "crow-editor-content",
