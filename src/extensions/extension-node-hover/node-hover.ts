@@ -10,18 +10,13 @@ export interface HoverOptions {
   className: string;
 
   /**
-   * 悬停节点的确定模式
-   * - all: 标记所有被悬停的节点（从最外层到最内层）
-   * - deepest: 只标记最深层的节点
-   * - shallowest: 只标记最浅层的节点
-   * @default 'deepest'
-   */
-  mode: "all" | "deepest" | "shallowest";
-
-  /**
    * 鼠标悬停时的回调函数
    */
-  onHover?: (node: ProseMirrorNode, pos: number, allNodes: Array<{ node: ProseMirrorNode; pos: number }>) => void;
+  onHover?: (
+    node: ProseMirrorNode,
+    pos: number,
+    allNodes: Array<{ node: ProseMirrorNode; pos: number }>
+  ) => void;
 
   /**
    * 鼠标离开时的回调函数
@@ -35,7 +30,6 @@ export const NodeHover = Extension.create<HoverOptions>({
   addOptions() {
     return {
       className: "is-hovered",
-      mode: "deepest",
       onHover: undefined,
       onLeave: undefined,
       showButton: false,
@@ -55,8 +49,9 @@ export const NodeHover = Extension.create<HoverOptions>({
     return [
       NodeHoverPlugin({
         className: this.options.className,
-        mode: this.options.mode,
-        onHover: (node, pos, allNodes) => {
+        onHover: (state) => {
+          const { node, pos, allNodes } = state;
+          console.log(state)
           // 更新 storage
           this.storage.hoveredNode = node;
           this.storage.hoveredPos = pos;

@@ -7,6 +7,7 @@ import { Focus } from "@tiptap/extensions";
 import { NodeHover } from "./extensions/extension-node-hover/node-hover";
 import { TableKit } from "@tiptap/extension-table";
 import { FloatingDragger } from "./ui/floating-menu";
+import { BlockWrapper } from "./extensions/block-wrapper";
 
 // import {
 //   Toolbar,
@@ -57,6 +58,17 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
         ],
       }),
       Focus,
+      // 统一为最外层节点添加 div 包装
+      BlockWrapper.configure({
+        types: [
+          'paragraph',
+          'heading',
+          'bulletList',
+          'orderedList',
+          'codeBlock',
+          'blockquote',
+        ],
+      }),
       NodeHover.configure({
         className: "is-hovered",
         mode: "all",
@@ -506,21 +518,21 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
         },
       ],
     },
-    editorProps: {
-      // attributes: {
-      //   class: "crow-editor-content",
-      // },
+    // editorProps: {
+    //   // attributes: {
+    //   //   class: "crow-editor-content",
+    //   // },
 
-      // 禁用默认的拖拽行为，只允许通过拖拽手柄触发
-      editable: () => true,
-      handleDOMEvents: {
-        dragstart: (view, event) => {
-          // 阻止默认的文本拖拽
-          event.preventDefault();
-          return true;
-        },
-      },
-    },
+    //   // 禁用默认的拖拽行为，只允许通过拖拽手柄触发
+    //   editable: () => true,
+    //   handleDOMEvents: {
+    //     dragstart: (view, event) => {
+    //       // 阻止默认的文本拖拽
+    //       event.preventDefault();
+    //       return true;
+    //     },
+    //   },
+    // },
   });
 
   useImperativeHandle(ref, () => ({
@@ -552,10 +564,10 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
             <Button data-style="primary">Save</Button>
           </ToolbarGroup>
         </Toolbar> */}
-        <FloatingDragger editor={editor} />
+        {/* <FloatingDragger editor={editor} />
         <DragHandle editor={editor}>
           <div>test</div>
-        </DragHandle>
+        </DragHandle> */}
         <EditorContent editor={editor} className="crow-editor" />
       </div>
     </EditorContext.Provider>
