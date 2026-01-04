@@ -1,4 +1,6 @@
 import { Document } from "@tiptap/extension-document";
+import { PageBlockHeader, PageBlockChildren } from "../nodes";
+import { baseStructure } from "./baseStructure";
 
 /**
  * 文档结构
@@ -8,6 +10,16 @@ import { Document } from "@tiptap/extension-document";
 export const CrowDocument = Document.extend({
   name: "doc",
 
-  // 固定两个 logicBlock：第一个是 header，第二个是 children
   content: "pageBlockHeader pageBlockChildren",
+
+  addExtensions() {
+    return [PageBlockHeader, PageBlockChildren];
+  },
+
+  addProseMirrorPlugins() {
+    return [
+      baseStructure(),
+      // 未来可以添加更多 plugins
+    ];
+  },
 });

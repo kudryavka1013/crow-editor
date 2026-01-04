@@ -5,13 +5,7 @@ import Code from "@tiptap/extension-code";
 import UniqueID from "@tiptap/extension-unique-id";
 
 import "./editor.scss";
-import { CrowDocument } from "./core/extensions/document";
-import { DocTitle } from "./core/extensions/doc-title";
-import {
-  PageBlockHeader,
-  PageBlockChildren,
-} from "./core/extensions/page-block";
-import { DocController } from "./core/extensions/doc-controller/index.ts";
+import { CrowDocument } from "./extensions/core/document/schema.ts";
 import { Selection } from "@tiptap/extensions";
 
 export interface CrowEditorRef {
@@ -21,13 +15,9 @@ export interface CrowEditorRef {
 const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
   const editor = useEditor({
     extensions: [
-      // 自定义文档结构（必须在最前面）
+      // 自定义文档结构（包含 header、children、docTitle）
       CrowDocument,
-      DocTitle,
-      PageBlockHeader,
-      PageBlockChildren,
-      DocController,
-      
+
       Selection,
       StarterKit.configure({
         code: false,
@@ -54,10 +44,10 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
               attrs: { level: 1 },
               content: [{ type: "text", text: "无标题文档" }],
             },
-            {
-              type: "docTitle",
-              content: [{ type: "text", text: "文档标题" }],
-            },
+            // {
+            //   type: "docTitle",
+            //   content: [{ type: "text", text: "文档标题" }],
+            // },
           ],
         },
         {
