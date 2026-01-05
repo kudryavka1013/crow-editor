@@ -3,10 +3,12 @@ import { forwardRef, useImperativeHandle } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Code from "@tiptap/extension-code";
 import UniqueID from "@tiptap/extension-unique-id";
+import TextAlign from "@tiptap/extension-text-align";
 
 import "./editor.scss";
 import { CrowDocument } from "./extensions/core/document/schema.ts";
 import { Selection } from "@tiptap/extensions";
+import { WrapNodeWithDiv } from "./extensions/core/wrapNodeWithDiv.ts";
 
 export interface CrowEditorRef {
   editor: ReturnType<typeof useEditor>;
@@ -15,13 +17,18 @@ export interface CrowEditorRef {
 const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
   const editor = useEditor({
     extensions: [
-      // 自定义文档结构（包含 header、children、docTitle）
       CrowDocument,
-
+      UniqueID.configure({
+        types: ["paragraph", "heading", "docTitle"],
+      }),
       Selection,
       StarterKit.configure({
         code: false,
         document: false, // 禁用默认的 document
+      }),
+
+      WrapNodeWithDiv.configure({
+        types: ["paragraph", "heading"],
       }),
 
       Code.extend({
@@ -29,7 +36,9 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
         priority: 1001,
       }),
 
-      UniqueID,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
     ],
 
     // 初始内容（固定结构）
@@ -41,13 +50,9 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
           content: [
             {
               type: "heading",
-              attrs: { level: 1 },
-              content: [{ type: "text", text: "无标题文档" }],
+              attrs: { textAlign: "center" },
+              content: [{ type: "text", text: "居中的标题" }],
             },
-            // {
-            //   type: "docTitle",
-            //   content: [{ type: "text", text: "文档标题" }],
-            // },
           ],
         },
         {
@@ -55,17 +60,18 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
           content: [
             {
               type: "heading",
-              attrs: { level: 2 },
-              content: [{ type: "text", text: "第一个标题" }],
+              attrs: { level: 2, textAlign: "center" },
+              content: [{ type: "text", text: "第一个标题（居中）" }],
             },
             {
               type: "heading",
               attrs: { level: 3 },
-              content: [{ type: "text", text: "第二个标题" }],
+              content: [{ type: "text", text: "第二个标题（左对齐）" }],
             },
             {
               type: "paragraph",
-              content: [{ type: "text", text: "开始输入内容..." }],
+              attrs: { textAlign: "center" },
+              content: [{ type: "text", text: "居中的段落内容..." }],
             },
           ],
         },

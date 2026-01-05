@@ -15,6 +15,7 @@
     "@tiptap/extension-code": "^3.14.0",
     "@tiptap/extension-document": "^3.14.0",
     "@tiptap/extension-table": "3.14.0",
+    "@tiptap/extension-text-align": "^3.14.0",
     "@tiptap/extension-unique-id": "^3.14.0",
     "@tiptap/extensions": "3.14.0",
     "@tiptap/pm": "^3.14.0",
