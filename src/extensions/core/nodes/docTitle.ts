@@ -48,51 +48,63 @@ export const DocTitle = Node.create({
        */
       Enter: ({ editor }) => {
         const { state } = editor;
-        const { $from } = state.selection;
+        let { selection } = state;
+        const { $from } = selection;
 
-        if ($from.parent.type.name === BaseNodeType.DocTitle) {
-          // 1. 寻找 PageBlockChildren 节点位置
-          let pageBlockChildrenPos: number | null = null;
+        // 只在 DocTitle 内部处理
+        if ($from.parent.type.name !== BaseNodeType.DocTitle) {
+          return false;
+        }
 
-          state.doc.descendants((node, pos) => {
-            if (
-              node.type.name === BaseNodeType.PageBlockChildren &&
-              pageBlockChildrenPos === null
-            ) {
-              pageBlockChildrenPos = pos;
-              return false;
-            }
-          });
+        let tr = state.tr;
 
-          if (pageBlockChildrenPos !== null) {
-            let tr = state.tr;
+        // 如果有选中内容，先删除选中内容
+        if (!selection.empty) {
+          tr = tr.deleteSelection();
+          // 重新获取删除后的选区位置
+          selection = tr.selection;
+        }
 
-            // 2. 创建一个新的段落节点，将标题中光标后的内容插入节点
-            const textAfterCursor = $from.parent.cut($from.parentOffset);
-            const paragraphNode = state.schema.nodes.paragraph.create(
-              null,
-              textAfterCursor.content
-            );
+        // 1. 寻找 PageBlockChildren 节点位置
+        let pageBlockChildrenPos: number | null = null;
 
-            // 3. 新段落插入到 PageBlockChildren 的第一个位置
-            const insertPos = pageBlockChildrenPos + 1;
-            tr = tr.insert(insertPos, paragraphNode);
-
-            // 4. 设置光标到新段落开头（使用 near 自动找到最近的有效位置）
-            const $insertPos = tr.doc.resolve(insertPos + 1);
-            tr = tr.setSelection(TextSelection.near($insertPos));
-            
-            // 5. 删除标题中光标后的内容
-            const deleteFrom = $from.pos;
-            const deleteTo = $from.pos + textAfterCursor.content.size;
-            if (textAfterCursor.content.size > 0) {
-              tr = tr.delete(deleteFrom, deleteTo);
-            }
-
-            // 提交事务
-            editor.view.dispatch(tr);
-            return true;
+        tr.doc.descendants((node, pos) => {
+          if (
+            node.type.name === BaseNodeType.PageBlockChildren &&
+            pageBlockChildrenPos === null
+          ) {
+            pageBlockChildrenPos = pos;
+            return false;
           }
+        });
+
+        if (pageBlockChildrenPos !== null) {
+          // 2. 创建一个新的段落节点，将标题中光标后的内容插入节点
+          const $newFrom = selection.$from;
+          const textAfterCursor = $newFrom.parent.cut($newFrom.parentOffset);
+          const paragraphNode = tr.doc.type.schema.nodes.paragraph.create(
+            null,
+            textAfterCursor.content
+          );
+
+          // 3. 新段落插入到 PageBlockChildren 的第一个位置
+          const insertPos = pageBlockChildrenPos + 1;
+          tr = tr.insert(insertPos, paragraphNode);
+
+          // 4. 设置光标到新段落开头（使用 near 自动找到最近的有效位置）
+          const $insertPos = tr.doc.resolve(insertPos + 1);
+          tr = tr.setSelection(TextSelection.near($insertPos));
+
+          // 5. 删除标题中光标后的内容
+          const deleteFrom = $newFrom.pos;
+          const deleteTo = $newFrom.pos + textAfterCursor.content.size;
+          if (textAfterCursor.content.size > 0) {
+            tr = tr.delete(deleteFrom, deleteTo);
+          }
+
+          // 提交事务
+          editor.view.dispatch(tr);
+          return true;
         }
 
         return false;
@@ -103,7 +115,12 @@ export const DocTitle = Node.create({
        * 阻止删除标题节点
        */
       Backspace: ({ editor }) => {
-        const { $from } = editor.state.selection;
+        const { selection } = editor.state;
+
+        // 如果有选中内容，走默认行为
+        if (!selection.empty) return false;
+
+        const { $from } = selection;
 
         // 阻止删除标题节点
         if (

@@ -54,6 +54,16 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
           type: "pageBlockChildren",
           content: [
             {
+              type: "heading",
+              attrs: { level: 2 },
+              content: [{ type: "text", text: "第一个标题" }],
+            },
+            {
+              type: "heading",
+              attrs: { level: 3 },
+              content: [{ type: "text", text: "第二个标题" }],
+            },
+            {
               type: "paragraph",
               content: [{ type: "text", text: "开始输入内容..." }],
             },
