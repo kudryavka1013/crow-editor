@@ -10,12 +10,14 @@ export const CrowParagraph = Paragraph.extend({
     // 使用 div + div + span 三层结构
     return [
       "div",
-      mergeAttributes(HTMLAttributes, { class: "crow-paragraph" }),
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+        class: "crow-paragraph",
+      }),
       [
         "div",
         { class: "text-block-content-container" },
         // ["span", { class: "crow-list-str" },'123'],  // 测试序号
-        ["span", { class: "text-block-content" }, 0],
+        ["span", { class: "text-block-paragraph-content" }, 0],
       ],
     ];
   },

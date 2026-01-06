@@ -13,6 +13,7 @@ import {
   Color,
   BackgroundColor,
 } from "@tiptap/extension-text-style";
+import { CrowHeading } from "./extensions/heading/index.ts";
 export interface CrowEditorRef {
   editor: ReturnType<typeof useEditor>;
 }
@@ -27,9 +28,11 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
         code: false,
         document: false, // 禁用默认的 document
         paragraph: false, // 禁用默认的 paragraph
+        heading: false, // 禁用默认的 heading
       }),
 
       CrowParagraph,
+      CrowHeading,
 
       Code.extend({
         excludes: "code",
@@ -62,7 +65,7 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
           content: [
             {
               type: "heading",
-              attrs: { level: 1 },
+              attrs: { level: 1, textAlign: "right" },
               content: [{ type: "text", text: "第一章 概述" }],
             },
             {
