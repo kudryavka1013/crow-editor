@@ -1,6 +1,7 @@
 import { Document } from "@tiptap/extension-document";
 import { PageBlockHeader, PageBlockChildren } from "../nodes";
-import { baseStructure } from "./baseStructure";
+import { BaseStructure } from "./baseStructure";
+import { NodeContainer } from "./nodeContainer";
 
 /**
  * 文档结构
@@ -10,10 +11,12 @@ import { baseStructure } from "./baseStructure";
 export const CrowDocument = Document.extend({
   name: "doc",
 
+  group: "logicBlock",
+
   content: "pageBlockHeader pageBlockChildren",
 
   addExtensions() {
-    return [PageBlockHeader, PageBlockChildren];
+    return [PageBlockHeader, PageBlockChildren, BaseStructure, NodeContainer];
   },
 
   onBeforeCreate: ({ editor }) => {
@@ -47,6 +50,8 @@ export const CrowDocument = Document.extend({
             headerBlock.content = [
               {
                 type: "docTitle",
+                // 保留原节点的属性
+                attrs: firstChild.attrs || {},
                 // 保留原内容
                 content: firstChild.content || [
                   { type: "text", text: "无标题文档" },
@@ -63,12 +68,5 @@ export const CrowDocument = Document.extend({
     } catch (e) {
       console.error("修正文档时出错:", e);
     }
-  },
-
-  addProseMirrorPlugins() {
-    return [
-      baseStructure(),
-      // 未来可以添加其他 plugins
-    ];
   },
 });
