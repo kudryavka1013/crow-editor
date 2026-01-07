@@ -3,10 +3,12 @@ import { mergeAttributes } from "@tiptap/core";
 
 /**
  * 扩展 Heading 插件
- * 使用 div + span 结构替代 p 标签
+ * - 使用 div + span 结构替代 p 标签
+ * - https://github.com/ueberdosis/tiptap/blob/main/packages/extension-heading/src/heading.ts
  */
 export const CrowHeading = Heading.extend({
-  // const originalRender = parentHTML?.renderHTML?.({ node, HTMLAttributes });
+  // group: 'block',
+  group: "block subBlock",
 
   renderHTML({ node, HTMLAttributes }) {
     const hasLevel = this.options.levels.includes(node.attrs.level);

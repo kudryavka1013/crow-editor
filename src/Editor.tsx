@@ -3,7 +3,6 @@ import { forwardRef, useImperativeHandle } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Code from "@tiptap/extension-code";
 import TextAlign from "@tiptap/extension-text-align";
-import Blockquote from "@tiptap/extension-blockquote";
 import "./editor.scss";
 import { CrowDocument } from "./extensions/core/document/schema.ts";
 import { Selection } from "@tiptap/extensions";
@@ -15,6 +14,23 @@ import {
 } from "@tiptap/extension-text-style";
 import { CrowHeading } from "./extensions/heading/index.ts";
 import { CrowBlockquote } from "./extensions/blockquote/index.ts";
+import { CrowCodeBlock } from "./extensions/codeBlock/index.ts";
+import { all, createLowlight } from 'lowlight'
+// import css from 'highlight.js/lib/languages/css'
+// import js from 'highlight.js/lib/languages/javascript'
+// import ts from 'highlight.js/lib/languages/typescript'
+// import html from 'highlight.js/lib/languages/xml'
+
+// create a lowlight instance with all languages loaded
+const lowlight = createLowlight(all)
+
+// This is only an example, all supported languages are already loaded above
+// but you can also register only specific languages to reduce bundle-size
+// lowlight.register('html', html)
+// lowlight.register('css', css)
+// lowlight.register('js', js)
+// lowlight.register('ts', ts)
+
 export interface CrowEditorRef {
   editor: ReturnType<typeof useEditor>;
 }
@@ -31,11 +47,15 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
         paragraph: false, // 禁用默认的 paragraph
         heading: false, // 禁用默认的 heading
         blockquote: false,
+        codeBlock: false,
       }),
 
       CrowParagraph,
       CrowHeading,
       CrowBlockquote,
+      CrowCodeBlock.configure({
+        lowlight,
+      }),
 
       Code.extend({
         excludes: "code",
@@ -261,7 +281,12 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
                     { type: "text", text: " 和 " },
                     {
                       type: "text",
-                      marks: [{ type: "link", attrs: { href: "https://example.com" } }],
+                      marks: [
+                        {
+                          type: "link",
+                          attrs: { href: "https://example.com" },
+                        },
+                      ],
                       text: "链接",
                     },
                     { type: "text", text: "。" },

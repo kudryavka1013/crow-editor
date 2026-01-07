@@ -80,7 +80,13 @@ export const NodeContainer = Extension.create({
     return [
       UniqueID.configure({
         attributeName: "record-id",
-        types: ["paragraph", "heading", "docTitle"],
+        types: [
+          "docTitle",
+          "paragraph",
+          "heading",
+          "blockquote",
+          "codeBlock",
+        ],
       }),
     ];
   },
@@ -95,12 +101,14 @@ export const NodeContainer = Extension.create({
           nodeViews: (() => {
             const schema = editor.schema;
             const nodeViews: Record<string, any> = {};
+            console.log(schema)
 
             // 从 UniqueID 扩展读取 attributeName 配置
             const uniqueIdExt = editor.extensionManager.extensions.find(
               (ext) => ext.name === "uniqueID"
             );
-            const uniqueIdAttr = uniqueIdExt?.options?.attributeName || "record-id";
+            const uniqueIdAttr =
+              uniqueIdExt?.options?.attributeName || "record-id";
             const dataAttr = `data-${uniqueIdAttr}`;
 
             Object.keys(schema.nodes).forEach((typeName) => {
@@ -128,6 +136,7 @@ export const NodeContainer = Extension.create({
                 // 获取节点的原始渲染规则
                 const rendered =
                   view.state.schema.nodes[typeName].spec.toDOM?.(node);
+                  console.log('rendered', rendered);
 
                 if (!rendered || !Array.isArray(rendered)) {
                   const contentDOM = document.createElement("div");
