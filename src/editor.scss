@@ -51,6 +51,29 @@
     margin: 8px 0;
   }
 
+  .crow-blockquote {
+    padding-left: 12px;
+    // margin-right: -2px;
+    // padding-right: 2px;
+    position: relative;
+    color: #767c85;
+    margin: 8px 0;
+
+    &::before {
+      width: 2px;
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      // left: -2px;
+      left: 0;
+      background: #bbbfc4;
+      border-radius: 1px;
+      -webkit-transform-origin: top;
+      transform-origin: top;
+    }
+  }
+
   p {
     margin: 0;
   }
@@ -67,7 +90,7 @@
 
   // h1 {
   //   margin-top: 26px;
-  //   margin-bottom: 10px; 
+  //   margin-bottom: 10px;
   //   font-size: 26px;
   // }
 

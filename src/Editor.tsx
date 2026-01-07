@@ -3,7 +3,7 @@ import { forwardRef, useImperativeHandle } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Code from "@tiptap/extension-code";
 import TextAlign from "@tiptap/extension-text-align";
-
+import Blockquote from "@tiptap/extension-blockquote";
 import "./editor.scss";
 import { CrowDocument } from "./extensions/core/document/schema.ts";
 import { Selection } from "@tiptap/extensions";
@@ -14,6 +14,7 @@ import {
   BackgroundColor,
 } from "@tiptap/extension-text-style";
 import { CrowHeading } from "./extensions/heading/index.ts";
+import { CrowBlockquote } from "./extensions/blockquote/index.ts";
 export interface CrowEditorRef {
   editor: ReturnType<typeof useEditor>;
 }
@@ -29,10 +30,12 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
         document: false, // 禁用默认的 document
         paragraph: false, // 禁用默认的 paragraph
         heading: false, // 禁用默认的 heading
+        blockquote: false,
       }),
 
       CrowParagraph,
       CrowHeading,
+      CrowBlockquote,
 
       Code.extend({
         excludes: "code",
@@ -42,6 +45,8 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
+
+      // Blockquote,
       TextStyle,
       Color,
       BackgroundColor,
@@ -219,12 +224,47 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
               type: "blockquote",
               content: [
                 {
-                  type: "paragraph",
+                  type: "heading",
+                  attrs: { level: 2 },
                   content: [
                     {
                       type: "text",
                       text: "这是一段引用文本，用于展示重要的说明或引用。",
                     },
+                  ],
+                },
+                {
+                  type: "paragraph",
+                  content: [
+                    {
+                      type: "text",
+                      text: "引用可以包含多个段落，这是第二段内容。",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "引用之后的正常段落。" }],
+            },
+            {
+              type: "blockquote",
+              content: [
+                {
+                  type: "paragraph",
+                  content: [
+                    { type: "text", text: "引用中可以包含 " },
+                    { type: "text", marks: [{ type: "bold" }], text: "加粗" },
+                    { type: "text", text: "、" },
+                    { type: "text", marks: [{ type: "italic" }], text: "斜体" },
+                    { type: "text", text: " 和 " },
+                    {
+                      type: "text",
+                      marks: [{ type: "link", attrs: { href: "https://example.com" } }],
+                      text: "链接",
+                    },
+                    { type: "text", text: "。" },
                   ],
                 },
               ],
