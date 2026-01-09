@@ -6,13 +6,13 @@ import { NodeViewContent } from "@tiptap/react";
  */
 export const CodeBlockNodeView = ({ node }: NodeViewProps) => {
   return (
-    <>
-      <label contentEditable={false}>代码块</label>
+    <div className="crow-codeblock">
+      <div>test</div>
       <pre>
         <code className={`language-${node.attrs.language || "text"}`}>
           <NodeViewContent />
         </code>
       </pre>
-    </>
+    </div>
   );
 };

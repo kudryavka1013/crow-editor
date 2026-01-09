@@ -91,7 +91,7 @@ export const NodeContainer = Extension.create({
     ];
   },
 
-  addProseMirrorPlugins() {
+/*   addProseMirrorPlugins() {
     const { editor } = this;
 
     return [
@@ -113,6 +113,7 @@ export const NodeContainer = Extension.create({
 
             Object.keys(schema.nodes).forEach((typeName) => {
               const nodeType = schema.nodes[typeName];
+              console.log('nodeType', nodeType)
 
               // 只处理块级节点，排除文档和容器节点
               const isContainer = nodeType.spec.group?.includes("logicBlock");
@@ -124,6 +125,7 @@ export const NodeContainer = Extension.create({
                 // 创建外层 wrapper
                 const wrapper = document.createElement("div");
                 const blockType = getBlockType(typeName, node);
+                console.log(typeName)
 
                 wrapper.className = `block doc-${blockType}-block`;
                 wrapper.setAttribute("data-block-type", blockType);
@@ -132,6 +134,7 @@ export const NodeContainer = Extension.create({
                 if (node.attrs[uniqueIdAttr]) {
                   wrapper.setAttribute(dataAttr, node.attrs[uniqueIdAttr]);
                 }
+                // console.log(wrapper)
 
                 // 获取节点的原始渲染规则
                 const rendered =
@@ -165,10 +168,12 @@ export const NodeContainer = Extension.create({
               };
             });
 
+            console.log('nodeViews', nodeViews);
+
             return nodeViews;
           })(),
         },
       }),
     ];
-  },
+  }, */
 });
