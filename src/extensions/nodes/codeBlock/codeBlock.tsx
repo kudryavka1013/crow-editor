@@ -1,6 +1,7 @@
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewContent } from "@tiptap/react";
-import { useMemo } from "react";
+import { useEffect } from "react";
+import { LANGUAGES, LANGUAGES_SET } from "./languages";
 
 /**
  * CodeBlock React 组件
@@ -8,33 +9,16 @@ import { useMemo } from "react";
 export const CodeBlockNodeView = ({
   node,
   updateAttributes,
-  editor,
 }: NodeViewProps) => {
-  const currentLanguage = node.attrs.language || "text";
+  const currentLanguage = node.attrs.language || "plaintext";
 
-  // 从 lowlight 实例动态获取已注册的语言列表
-  const languages = useMemo(() => {
-    const codeBlockExt = editor.extensionManager.extensions.find(
-      (ext) => ext.name === "codeBlock",
-    );
-
-    const lowlight = codeBlockExt?.options?.lowlight;
-
-    if (!lowlight) {
-      return [{ value: "text", label: "Plain Text" }];
+  // 检查语言是否合法，不合法则重置为 plaintext
+  useEffect(() => {
+    if (!LANGUAGES_SET.has(currentLanguage)) {
+      console.warn("invalid language", currentLanguage);
+      updateAttributes({ language: "plaintext" });
     }
-
-    // 获取所有已注册的语言
-    const registeredLanguages = lowlight.listLanguages();
-
-    return [
-      { value: "text", label: "Plain Text" },
-      ...registeredLanguages.map((lang: string) => ({
-        value: lang,
-        label: lang.charAt(0).toUpperCase() + lang.slice(1),
-      })),
-    ];
-  }, [editor]);
+  }, [currentLanguage, updateAttributes]);
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     updateAttributes({ language: e.target.value });
@@ -44,11 +28,11 @@ export const CodeBlockNodeView = ({
     <div className="crow-codeblock">
       <div className="codeblock-header" contentEditable={false}>
         <select
-          value={currentLanguage}
+          value={node.attrs.language}
           onChange={handleLanguageChange}
           className="language-selector"
         >
-          {languages.map((lang) => (
+          {LANGUAGES.map((lang) => (
             <option key={lang.value} value={lang.value}>
               {lang.label}
             </option>
@@ -56,7 +40,7 @@ export const CodeBlockNodeView = ({
         </select>
       </div>
       <pre>
-        <code className={`language-${currentLanguage}`}>
+        <code className={`language-${node.attrs.language}`}>
           <NodeViewContent />
         </code>
       </pre>
