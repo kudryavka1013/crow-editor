@@ -3,20 +3,22 @@ import { forwardRef, useImperativeHandle } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Code from "@tiptap/extension-code";
 import TextAlign from "@tiptap/extension-text-align";
-import "./editor.scss";
-import { CrowDocument } from "./extensions/core/document/schema.ts";
 import { Selection } from "@tiptap/extensions";
-import { CrowParagraph } from "./extensions/paragraph/index.ts";
 import {
   TextStyle,
   Color,
   BackgroundColor,
 } from "@tiptap/extension-text-style";
-import { CrowHeading } from "./extensions/heading/index.ts";
-import { CrowBlockquote } from "./extensions/blockquote/index.ts";
-import { CrowCodeBlock } from "./extensions/codeBlock/index.ts";
-import { CodeSpan } from "./extensions/codeBlock/codeSpan.ts";
-import { all, createLowlight } from 'lowlight'
+import { all, createLowlight } from 'lowlight';
+import { CrowDocument } from "./extensions/core";
+import {
+  CrowParagraph,
+  CrowHeading,
+  CrowBlockquote,
+  CrowCodeBlock,
+  CodeSpan,
+} from "./extensions/nodes";
+import "./editor.scss";
 // import css from 'highlight.js/lib/languages/css'
 // import js from 'highlight.js/lib/languages/javascript'
 // import ts from 'highlight.js/lib/languages/typescript'

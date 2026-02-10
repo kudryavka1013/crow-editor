@@ -1,5 +1,5 @@
 import { Document } from "@tiptap/extension-document";
-import { PageBlockHeader, PageBlockChildren } from "../nodes";
+import { PageBlockHeader, PageBlockChildren } from "../baseNodes";
 import { BaseStructure } from "./baseStructure";
 import { NodeContainer } from "./nodeContainer";
 

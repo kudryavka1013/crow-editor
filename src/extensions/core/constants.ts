@@ -1,6 +1,5 @@
 /**
  * Core 节点类型名称常量
- * 用于避免硬编码字符串，提供类型安全
  */
 export const BaseNodeType = {
   DocTitle: "docTitle",

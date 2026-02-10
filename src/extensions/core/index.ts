@@ -2,7 +2,7 @@
 export { CrowDocument } from "./document";
 
 // 节点
-export { PageBlockHeader, PageBlockChildren } from "./nodes";
+export { PageBlockHeader, PageBlockChildren } from "./baseNodes";
 
 // 常量
 export { BaseNodeType } from "./constants";
