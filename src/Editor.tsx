@@ -9,7 +9,6 @@ import {
   Color,
   BackgroundColor,
 } from "@tiptap/extension-text-style";
-import { all, createLowlight } from 'lowlight';
 import { CrowDocument } from "./extensions/core";
 import {
   CrowParagraph,
@@ -25,7 +24,7 @@ import "./editor.scss";
 // import html from 'highlight.js/lib/languages/xml'
 
 // create a lowlight instance with all languages loaded
-const lowlight = createLowlight(all)
+// const lowlight = createLowlight(all)
 
 // This is only an example, all supported languages are already loaded above
 // but you can also register only specific languages to reduce bundle-size
@@ -57,9 +56,7 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
       CrowHeading,
       CrowBlockquote,
       CodeSpan,
-      CrowCodeBlock.configure({
-        lowlight,
-      }),
+      CrowCodeBlock,
 
       Code.extend({
         excludes: "code",
@@ -107,7 +104,11 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
               type: "codeBlock",
               attrs: { language: "javascript" },
               content: [
-                { type: "text", text: "function hello() {\n  console.log(\"Hello World\");\n}" },
+                {
+                  type: "text",
+                  text: 'function hello() {\n  console.log("Hello World");\n}',
+                  marks: [{ type: "underline" }],
+                },
               ],
             },
             {
@@ -134,21 +135,27 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
     <EditorContext.Provider value={{ editor }}>
       <div className="crow-editor-wrapper">
         {/* Debug Toolbar */}
-        <div style={{ padding: '10px', borderBottom: '1px solid #ccc', background: '#f5f5f5' }}>
+        <div
+          style={{
+            padding: "10px",
+            borderBottom: "1px solid #ccc",
+            background: "#f5f5f5",
+          }}
+        >
           <button
             onClick={() => {
-              console.log('=== Editor Content ===');
-              console.log('JSON:', editor?.getJSON());
-              console.log('HTML:', editor?.getHTML());
-              console.log('Text:', editor?.getText());
+              console.log("=== Editor Content ===");
+              console.log("JSON:", editor?.getJSON());
+              console.log("HTML:", editor?.getHTML());
+              console.log("Text:", editor?.getText());
             }}
             style={{
-              padding: '8px 16px',
-              background: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
+              padding: "8px 16px",
+              background: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
             }}
           >
             输出编辑器内容
