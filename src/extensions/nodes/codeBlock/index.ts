@@ -1,7 +1,6 @@
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { createReactNodeView } from "@/lib/createReactNodeView";
 import { CodeBlockNodeView } from "./codeBlock";
-import { mergeAttributes } from "@tiptap/core";
 import { createLowlight } from "lowlight";
 import { grammars } from "./languages";
 
@@ -18,28 +17,45 @@ export const CrowCodeBlock = CodeBlockLowlight.configure({
 }).extend({
   group: "block subBlock",
 
-  // 确保 language 属性被正确序列化
-  // addAttributes() {
-  //   return {
-  //     ...this.parent?.(),
-  //     language: {
-  //       default: "plaintext",
-  //       // parseHTML: (element) => element.getAttribute("data-language"),
-  //       // renderHTML: (attributes) => {
-  //       //   return {
-  //       //     // "data-language": attributes.language,
-  //       //     // class: `language-${attributes.language}`,
-  //       //   };
-  //       // },
-  //     },
-  //   };
-  // },
-
-  renderHTML({ HTMLAttributes }) {
-    return ["div", mergeAttributes(HTMLAttributes), 0];
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      collapsed: {
+        default: false,
+        parseHTML: (element) =>
+          element.getAttribute("data-collapsed") === "true",
+        renderHTML: (attributes) => {
+          return {
+            "data-collapsed": attributes.collapsed,
+          };
+        },
+        rendered: false,
+      },
+    };
   },
 
+  parseHTML() {
+    return [
+      {
+        tag: "pre",
+        preserveWhitespace: "full",
+      },
+      {
+        tag: "code",
+        preserveWhitespace: "full",
+      },
+    ];
+  },
+
+  /** 使用默认插件的格式，复制时写入的格式
+   * 结构见 https://github.com/ueberdosis/tiptap/blob/main/packages/extension-code-block/src/code-block.ts#L141-L153
+   */
+
+  // renderHTML({ HTMLAttributes }) {
+  //   return ["code", mergeAttributes(HTMLAttributes), 0];
+  // },
+
   addNodeView() {
-    return createReactNodeView(CodeBlockNodeView, "crow-code-block");
+    return createReactNodeView(CodeBlockNodeView, "doc-codeBlock-block");
   },
 });

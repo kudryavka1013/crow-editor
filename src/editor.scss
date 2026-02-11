@@ -1,6 +1,6 @@
 @use "./styles/_variables.scss";
 @use "./styles/_keyframe-animations.scss";
-@import "./extensions/nodes/index.scss";
+@use "./extensions/nodes/index.scss";
 
 .crow-editor {
   min-height: 500px;

@@ -205,6 +205,31 @@
     0px 6px 8px 0px rgba(0, 0, 0, 0.22), 0px 2px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
+/* CodeBlock colors */
+:root {
+  --tt-codeblock-bg: var(--tt-gray-light-50);
+  --tt-codeblock-header-bg: var(--tt-gray-light-100);
+  --tt-codeblock-border: var(--tt-border-color);
+  --tt-codeblock-text: var(--tt-gray-light-900);
+  --tt-codeblock-button-bg: var(--white);
+  --tt-codeblock-button-hover-bg: var(--tt-gray-light-100);
+  --tt-codeblock-scrollbar-track: var(--tt-gray-light-100);
+  --tt-codeblock-scrollbar-thumb: var(--tt-gray-light-400);
+  --tt-codeblock-scrollbar-thumb-hover: var(--tt-gray-light-500);
+}
+
+.dark {
+  --tt-codeblock-bg: var(--tt-gray-dark-100);
+  --tt-codeblock-header-bg: var(--tt-gray-dark-200);
+  --tt-codeblock-border: var(--tt-border-color);
+  --tt-codeblock-text: var(--tt-gray-dark-900);
+  --tt-codeblock-button-bg: var(--tt-gray-dark-50);
+  --tt-codeblock-button-hover-bg: var(--tt-gray-dark-300);
+  --tt-codeblock-scrollbar-track: var(--tt-gray-dark-200);
+  --tt-codeblock-scrollbar-thumb: var(--tt-gray-dark-400);
+  --tt-codeblock-scrollbar-thumb-hover: var(--tt-gray-dark-500);
+}
+
 /* Text colors */
 :root {
   --tt-color-text-gray: hsl(45, 2%, 46%);
