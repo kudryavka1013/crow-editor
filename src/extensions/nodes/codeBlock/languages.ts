@@ -77,7 +77,7 @@ export const grammars = {
 /**
  * 最常用的编程语言列表（按字母顺序排序）
  */
-export const LANGUAGES = [
+export const CODEBLOCK_LANGUAGES = [
   { value: "plaintext", label: "Plain Text" },
   { value: "bash", label: "Bash" },
   { value: "c", label: "C" },
@@ -118,4 +118,4 @@ export const LANGUAGES = [
 /**
  * 合法语言值的 Set（用于快速查找）
  */
-export const LANGUAGES_SET = new Set(LANGUAGES.map((lang) => lang.value));
+export const CODEBLOCK_LANGUAGES_SET = new Set(CODEBLOCK_LANGUAGES.map((lang) => lang.value));

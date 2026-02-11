@@ -21,37 +21,30 @@ function getBlockType(typeName: string, node: any): string {
  */
 export function createReactNodeView(
   renderContent: (props: NodeViewProps) => ReactElement,
-  className?: string
+  className?: string,
 ) {
   return ReactNodeViewRenderer(
     (props: NodeViewProps) => {
-      return (
-        <NodeViewWrapper as={"node-view" as ElementType}>
-          {/* <div className={className}>{renderContent(props)}</div>
-           */}{renderContent(props)}
-        </NodeViewWrapper>
-      );
+      return <NodeViewWrapper>{renderContent(props)}</NodeViewWrapper>;
     },
     {
       as: "div",
       attrs: ({ node, HTMLAttributes }) => {
         const typeName = node.type.name;
-        const recordId = node.attrs["record-id"];
+        console.log("node", node);
+        // const recordId = node.attrs["record-id"];
 
-        // 合并 class，避免覆盖 HTMLAttributes 中的 class
-        const existingClass = HTMLAttributes || "";
-        console.log("existingClass:", HTMLAttributes);
-        const combinedClass =
-          `block doc-${typeName}-block ${existingClass}`.trim();
+        // console.log("existingClass:", HTMLAttributes);
+        // const combinedClass = `block doc-${typeName}-block`;
 
         return {
-          ...HTMLAttributes,
-          // class: combinedClass,
-          "data-record-id": recordId,
           "data-block-type": typeName,
+          ...HTMLAttributes,
+          // "data-record-id": record-id 也在 HTMLAttributes 里携带
+          // class: combinedClass,
         };
       },
-      className: `tt-node-view block`,
-    }
+      className: `block tt-node-view`,
+    },
   );
 }

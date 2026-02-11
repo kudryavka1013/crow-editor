@@ -20,6 +20,7 @@ export const CrowHeading = Heading.extend({
         `h${level}`,
         mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
           class: "crow-heading",
+          "data-record-id": undefined,
           level,
         }),
         [
@@ -28,7 +29,7 @@ export const CrowHeading = Heading.extend({
           ["span", { class: "text-block-heading-content" }, 0],
         ],
       ],
-      node.attrs
+      node.attrs,
     );
   },
 });

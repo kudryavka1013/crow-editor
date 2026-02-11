@@ -102,7 +102,7 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
             },
             {
               type: "codeBlock",
-              attrs: { language: "plaintext" },
+              attrs: { language: "plaintext", "record-id": "code-block-1" },
               content: [
                 {
                   type: "text",

@@ -1,10 +1,12 @@
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewContent } from "@tiptap/react";
 import { useEffect } from "react";
-import { LANGUAGES, LANGUAGES_SET } from "./languages";
+import { CODEBLOCK_LANGUAGES, CODEBLOCK_LANGUAGES_SET } from "./languages";
 
 /**
  * CodeBlock React 组件
+ * - highlight.js 样式参考: https://highlightjs.org/examples
+ * - demo: https://highlightjs.org/demo 目前使用 vs2015
  */
 export const CodeBlockNodeView = ({
   node,
@@ -14,7 +16,7 @@ export const CodeBlockNodeView = ({
 
   // 检查语言是否合法，不合法则重置为 plaintext
   useEffect(() => {
-    if (!LANGUAGES_SET.has(currentLanguage)) {
+    if (!CODEBLOCK_LANGUAGES_SET.has(currentLanguage)) {
       console.warn("invalid language", currentLanguage);
       updateAttributes({ language: "plaintext" });
     }
@@ -32,7 +34,7 @@ export const CodeBlockNodeView = ({
           onChange={handleLanguageChange}
           className="language-selector"
         >
-          {LANGUAGES.map((lang) => (
+          {CODEBLOCK_LANGUAGES.map((lang) => (
             <option key={lang.value} value={lang.value}>
               {lang.label}
             </option>
