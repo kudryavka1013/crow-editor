@@ -2,6 +2,7 @@ import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewContent } from "@tiptap/react";
 import { useEffect, useState } from "react";
 import { CODEBLOCK_LANGUAGES, CODEBLOCK_LANGUAGES_SET } from "./languages";
+import { ArrowDownSLine, ArrowRightSLine } from "@/components/icons";
 
 /**
  * CodeBlock React 组件
@@ -56,7 +57,7 @@ export const CodeBlockNodeView = ({
           className="collapse-button"
           title={collapsed ? "展开" : "折叠"}
         >
-          {collapsed ? "▶" : "▼"}
+            {collapsed ? <ArrowRightSLine className="arrow-icon" /> : <ArrowDownSLine className="arrow-icon" />}
         </button>
         <div className="header-right">
           <select
