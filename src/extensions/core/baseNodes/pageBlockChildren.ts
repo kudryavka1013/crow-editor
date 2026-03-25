@@ -1,7 +1,7 @@
 import { Node } from "@tiptap/core";
 import { TextSelection } from "@tiptap/pm/state";
 import { BaseNodeType } from "../constants";
-import { isCursorAtNodeStart } from "@/lib/utils";
+import { isCursorAtNodeStart, handleBackspaceTextAlign } from "@/lib/utils";
 
 /**
  * DocTitle 基础节点
@@ -55,6 +55,9 @@ export const PageBlockChildren = Node.create({
 
         // 场景1: heading 转换为 paragraph
         if (blockNode.type.name === "heading") {
+          // 前置判断：当对齐属性存在时，优先循环切换对齐方式 right -> center -> left
+          if (handleBackspaceTextAlign(editor, blockNode)) return true;
+
           // 检查前一个节点是否是空的 paragraph
           const currentIndex = $from.index($from.depth - 1);
           if (currentIndex > 0) {
@@ -87,6 +90,9 @@ export const PageBlockChildren = Node.create({
 
         // 场景2: paragraph 合并到 docTitle（必须是第一个子节点）
         if (blockNode.type.name === "paragraph") {
+          // 前置判断：当对齐属性存在时，优先循环切换对齐方式 right -> center -> left
+          if (handleBackspaceTextAlign(editor, blockNode)) return true;
+
           // 必须是第一个子节点
           if ($from.index($from.depth - 1) !== 0) return false;
 
