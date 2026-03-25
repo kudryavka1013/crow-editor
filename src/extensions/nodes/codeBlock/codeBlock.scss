@@ -1,0 +1,97 @@
+.crow-codeblock {
+  margin: 8px 0;
+  border-radius: var(--tt-radius-lg);
+  background: var(--tt-codeblock-bg);
+  border: 1px solid var(--tt-codeblock-border);
+  overflow: hidden;
+
+  pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    background: transparent;
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.65;
+
+    code {
+      display: block;
+      padding: 0;
+      background: transparent;
+      color: var(--tt-codeblock-text);
+      font-family: inherit;
+      font-size: inherit;
+      white-space: pre;
+      word-wrap: normal;
+    }
+  }
+
+  pre::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  pre::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  pre::-webkit-scrollbar-thumb {
+    background: var(--tt-codeblock-scrollbar-thumb);
+    border-radius: var(--tt-radius-xs);
+
+    &:hover {
+      background: var(--tt-codeblock-scrollbar-thumb-hover);
+    }
+  }
+}
+
+.codeblock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background: var(--tt-codeblock-header-bg);
+  border-bottom: 1px solid var(--tt-codeblock-border);
+
+  /* header 和按钮的区分：用更深的背景 + 轻微内阴影 */
+  box-shadow: inset 0 -1px 0 var(--tt-gray-light-a-100);
+
+  .header-right {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  /* select 和 button 在 header 里统一用 small 尺寸 */
+  .crow-button,
+  .crow-select {
+    height: 1.75rem;
+    font-size: 0.8125rem;
+    border-radius: var(--tt-radius-md);
+  }
+
+  .crow-select {
+    padding: 0 0.5rem;
+    background-color: transparent;
+    color: var(--tt-gray-light-a-500);
+    border: 1px solid transparent;
+
+    &:hover {
+      background-color: var(--tt-gray-light-a-100);
+      color: var(--tt-gray-light-a-800);
+      border-color: var(--tt-gray-light-a-200);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--tt-gray-light-a-200);
+    }
+  }
+
+  .crow-button {
+    color: var(--tt-gray-light-a-500);
+
+    &:hover {
+      color: var(--tt-gray-light-a-800);
+    }
+  }
+}

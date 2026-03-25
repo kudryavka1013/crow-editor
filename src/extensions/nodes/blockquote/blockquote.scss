@@ -1,0 +1,18 @@
+.crow-blockquote {
+  padding-left: 12px;
+  position: relative;
+  color: #767c85;
+  margin: 8px 0;
+
+  &::before {
+    width: 2px;
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: #bbbfc4;
+    border-radius: 1px;
+    transform-origin: top;
+  }
+}

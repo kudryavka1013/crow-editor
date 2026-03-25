@@ -6,5 +6,5 @@ import CrowEditor from "./Editor.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CrowEditor />
-  </StrictMode>
+  </StrictMode>,
 );
