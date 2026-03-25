@@ -1,15 +1,21 @@
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewContent } from "@tiptap/react";
 import { useEffect, useState } from "react";
+import { Select } from "@/components/UI/Select";
 import { CODEBLOCK_LANGUAGES, CODEBLOCK_LANGUAGES_SET } from "./languages";
-import { ArrowDownSLine, ArrowRightSLine } from "@/components/icons";
+import {
+  RiArrowDownSLine,
+  RiArrowRightSLine,
+  RiCheckLine,
+  RiFileCopyLine,
+} from "@remixicon/react";
+import { Button } from "@/components/UI/Button";
 
 /**
  * CodeBlock React 组件
  * - highlight.js 样式参考: https://highlightjs.org/examples
  * - demo: https://highlightjs.org/demo 目前使用 vs2015
  * - https://github.com/ueberdosis/tiptap/blob/main/packages/extension-code-block/src/code-block.ts
- * 
  */
 export const CodeBlockNodeView = ({
   node,
@@ -28,10 +34,6 @@ export const CodeBlockNodeView = ({
     }
   }, [currentLanguage, updateAttributes]);
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateAttributes({ language: e.target.value });
-  };
-
   const handleCopy = async () => {
     const code = node.textContent;
     try {
@@ -47,37 +49,40 @@ export const CodeBlockNodeView = ({
     updateAttributes({ collapsed: !collapsed });
   };
 
-  console.log(editor)
+  console.log(editor);
 
   return (
     <div className="crow-codeblock">
       <div className="codeblock-header" contentEditable={false}>
-        <button
+        <Button
           onClick={toggleCollapse}
-          className="collapse-button"
+          // className="collapse-button"
           title={collapsed ? "展开" : "折叠"}
         >
-            {collapsed ? <ArrowRightSLine className="arrow-icon" /> : <ArrowDownSLine className="arrow-icon" />}
-        </button>
+          {collapsed ? (
+            <RiArrowRightSLine size={16} />
+          ) : (
+            <RiArrowDownSLine size={16} />
+          )}
+        </Button>
         <div className="header-right">
-          <select
+          <Select
             value={node.attrs.language}
-            onChange={handleLanguageChange}
-            className="language-selector"
+            onChange={(e) => updateAttributes({ language: (e.target as HTMLSelectElement).value })}
           >
             {CODEBLOCK_LANGUAGES.map((lang) => (
               <option key={lang.value} value={lang.value}>
                 {lang.label}
               </option>
             ))}
-          </select>
-          <button
+          </Select>
+          <Button
             onClick={handleCopy}
             className="copy-button"
             title={copied ? "已复制!" : "复制代码"}
           >
-            {copied ? "✓" : "复制"}
-          </button>
+            {copied ? <RiCheckLine size={16} /> : <RiFileCopyLine size={16} />}
+          </Button>
         </div>
       </div>
       {!collapsed && (
