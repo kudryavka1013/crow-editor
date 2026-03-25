@@ -132,6 +132,14 @@ export const DocTitle = Node.create({
 
         return false;
       },
+
+      /**
+       * 标题内按 Tab
+       * 阻止焦点跳转
+       */
+      Tab: () => {
+        return true;
+      },
     };
   },
 });
