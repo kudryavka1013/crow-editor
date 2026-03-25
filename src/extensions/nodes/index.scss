@@ -1,5 +1,5 @@
 // 统一导入所有 node 样式
-@import "./paragraph/paragraph.scss";
-@import "./heading/heading.scss";
-@import "./blockquote/blockquote.scss";
-@import "./codeBlock/codeBlock.scss";
+@use "./paragraph/paragraph.scss";
+@use "./heading/heading.scss";
+@use "./blockquote/blockquote.scss";
+@use "./codeBlock/codeBlock.scss";

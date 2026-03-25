@@ -18,6 +18,7 @@ export const CrowParagraph = Paragraph.extend({
         "div",
         mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
           class: "crow-paragraph",
+          "data-record-id": undefined
         }),
         [
           "div",

@@ -15,7 +15,7 @@ import {
   CrowHeading,
   CrowBlockquote,
   CrowCodeBlock,
-  CodeSpan,
+  // CodeSpan,
 } from "./extensions/nodes";
 import "./editor.scss";
 // import css from 'highlight.js/lib/languages/css'
@@ -55,7 +55,7 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
       CrowParagraph,
       CrowHeading,
       CrowBlockquote,
-      CodeSpan,
+      // CodeSpan,
       CrowCodeBlock,
 
       Code.extend({
@@ -102,12 +102,12 @@ const CrowEditor = forwardRef<CrowEditorRef>((props, ref) => {
             },
             {
               type: "codeBlock",
-              attrs: { language: "javascript" },
+              attrs: { language: "plaintext", "record-id": "code-block-1" },
               content: [
                 {
                   type: "text",
                   text: 'function hello() {\n  console.log("Hello World");\n}',
-                  marks: [{ type: "underline" }],
+                  // marks: [{ type: "underline" }],
                 },
               ],
             },
