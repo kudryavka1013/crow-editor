@@ -139,6 +139,13 @@ export const PageBlockChildren = Node.create({
 
         return false;
       },
+
+      /**
+       * 阻止 Tab 键跳转焦点
+       */
+      Tab: () => {
+        return true;
+      },
     };
   },
 });
